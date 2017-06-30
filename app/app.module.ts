@@ -13,6 +13,7 @@ import { NavbarComponent } from './nav/nav.component';
     imports: [
         BrowserModule,
         FormsModule,
+        HttpModule,
         AppRoutingModule
     ],
     declarations: [
