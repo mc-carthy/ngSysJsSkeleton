@@ -1,34 +1,39 @@
 import { Component, OnInit } from '@angular/core';
-import { SocketService } from './../shared/socket.service';
+import { SocketService } from '../shared/socket.service';
 
 @Component({
     moduleId: module.id,
-    templateUrl: 'home.template.html',
-    styleUrls: [
-        'home.component.css'
-    ]
+    selector: 'ng-home',
+    styleUrls: ['home.component.css'],
+    templateUrl: 'home.template.html'
 })
 
 export class HomeComponent implements OnInit {
+  messageText: string;
+  messages: Array<any>;
+  avatar: string = 'https://api.adorable.io/avatars/30/abott@adorable.png';
+  selfAuthored: boolean = false;
 
-    constructor(
-        private socketService: SocketService
-    ) {}
+  constructor(private _socketService: SocketService) { }
 
-    ngOnInit()
-    {
-        this.socketService.emit('event1', {
-            msg: 'Client to server, can you hear me server?'
-        });
-        this.socketService.on('event2', (data: any) => {
-            console.log(data.msg);
-            this.socketService.emit('event3', {
-                msg: 'Yes, its working for me!!'
-            });
-        });
-        this.socketService.on('event4', (data: any) => {
-            console.log(data.msg);
-        });
-    }
+  ngOnInit() {
+    this.messages = new Array();
+
+    this._socketService.on('message-received', (msg: any) => {
+      this.messages.push(msg);
+      console.log(msg);
+      console.log(this.messages);
+    });
+  }
+
+  sendMessage() {
+    const message = {
+      text: this.messageText,
+      date: Date.now(),
+      imageUrl: this.avatar
+    };
+    this._socketService.emit('send-message', message);
+    this.messageText = '';
+  }
 
 }

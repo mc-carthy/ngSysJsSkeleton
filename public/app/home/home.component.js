@@ -10,35 +10,39 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var socket_service_1 = require("./../shared/socket.service");
+var socket_service_1 = require("../shared/socket.service");
 var HomeComponent = (function () {
-    function HomeComponent(socketService) {
-        this.socketService = socketService;
+    function HomeComponent(_socketService) {
+        this._socketService = _socketService;
+        this.avatar = 'https://api.adorable.io/avatars/30/abott@adorable.png';
+        this.selfAuthored = false;
     }
     HomeComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.socketService.emit('event1', {
-            msg: 'Client to server, can you hear me server?'
+        this.messages = new Array();
+        this._socketService.on('message-received', function (msg) {
+            _this.messages.push(msg);
+            console.log(msg);
+            console.log(_this.messages);
         });
-        this.socketService.on('event2', function (data) {
-            console.log(data.msg);
-            _this.socketService.emit('event3', {
-                msg: 'Yes, its working for me!!'
-            });
-        });
-        this.socketService.on('event4', function (data) {
-            console.log(data.msg);
-        });
+    };
+    HomeComponent.prototype.sendMessage = function () {
+        var message = {
+            text: this.messageText,
+            date: Date.now(),
+            imageUrl: this.avatar
+        };
+        this._socketService.emit('send-message', message);
+        this.messageText = '';
     };
     return HomeComponent;
 }());
 HomeComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
-        templateUrl: 'home.template.html',
-        styleUrls: [
-            'home.component.css'
-        ]
+        selector: 'ng-home',
+        styleUrls: ['home.component.css'],
+        templateUrl: 'home.template.html'
     }),
     __metadata("design:paramtypes", [socket_service_1.SocketService])
 ], HomeComponent);

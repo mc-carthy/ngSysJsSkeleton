@@ -13,21 +13,10 @@ io.on('connection', (socket) => {
 
     // Test messages
 
-    socket.on('event1', (data) => {
-        console.log(data.msg);
+    socket.on('send-message', (data) => {
+        console.log(data.text);
+        io.emit('message-recieved', data);
     });
-
-    socket.emit('event2', {
-        msg: 'Server to client, do you read me? Over.'
-    });
-
-    socket.on('event3', (data) => {
-        console.log(data.msg);
-        socket.emit('event4', {
-            msg: 'Loud and clear :)'
-        });
-    });
-
 });
 
 server.listen(port, () => {
