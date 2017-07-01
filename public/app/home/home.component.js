@@ -10,23 +10,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
-var io = require("socket.io-client");
+var socket_service_1 = require("./../shared/socket.service");
 var HomeComponent = (function () {
-    function HomeComponent() {
-        this.socket = io.connect();
+    function HomeComponent(socketService) {
+        this.socketService = socketService;
     }
     HomeComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.socket.emit('event1', {
+        this.socketService.emit('event1', {
             msg: 'Client to server, can you hear me server?'
         });
-        this.socket.on('event2', function (data) {
+        this.socketService.on('event2', function (data) {
             console.log(data.msg);
-            _this.socket.emit('event3', {
+            _this.socketService.emit('event3', {
                 msg: 'Yes, its working for me!!'
             });
         });
-        this.socket.on('event4', function (data) {
+        this.socketService.on('event4', function (data) {
             console.log(data.msg);
         });
     };
@@ -40,7 +40,7 @@ HomeComponent = __decorate([
             'home.component.css'
         ]
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [socket_service_1.SocketService])
 ], HomeComponent);
 exports.HomeComponent = HomeComponent;
 //# sourceMappingURL=home.component.js.map
